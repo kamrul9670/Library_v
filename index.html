@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VED JYOTI Library</title>
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      background-color: #fdf6e3;
+      color: #333;
+    }
+
+    header {
+      background: #4a2c17;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background: #653d1c;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac') center/cover no-repeat;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px 5px #000;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #4a2c17;
+    }
+
+    .services {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .service-card {
+      flex: 1 1 30%;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      background: #4a2c17;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .services {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>VED JYOTI Library</h1>
+    <p>ज्ञान की ज्योति से जीवन को प्रकाशित करें</p>
+  </header>
+
+  <nav>
+     <a href="#">Home</a>
+       <a href="./SeatBook.html">Seat Book </a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+     <a href="./displaylist.html">Student List </a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Welcome to VED JYOTI</h1>
+  </div>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>VED JYOTI Library is a peaceful and resourceful place for students, professionals, and book lovers. Established with a vision to promote education and learning, our library offers a calm environment, rich collection of books, and excellent study facilities.</p>
+  </section>
+
+  <section id="services">
+    <h2>Our Services</h2>
+    <div class="services">
+      <div class="service-card">
+        <h3> Night Plan </h3>
+        <p>    $ 300 Rs</p>
+        <p>   10 pm to 6 am</p>
+      </div>
+      <div class="service-card">
+        <h3>Study Space</h3>
+        <p>Spacious and quiet environment with Wi-Fi, light, fans, and comfortable seating.</p>
+      </div>
+      <div class="service-card">
+        <h3>Membership</h3>
+        <p>Flexible monthly and yearly membership plans at affordable prices.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p><strong>Address:</strong> VED JYOTI Library, Near Bus Stand, Your City</p>
+    <p><strong>Phone:</strong> +91-9876543210</p>
+    <p><strong>Email:</strong> vedjyotilibrary@example.com</p>
+  </section>
+
+  <footer>
+    <p>   Developed by Kamrul Hasan &nbsp; &nbsp; &nbsp; &nbsp; © 2025 VED JYOTI Library. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

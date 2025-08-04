@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VED JYOTI Library – Book Seat</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #4a2c17;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    section {
+      padding: 30px 20px;
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { color: #4a2c17; }
+    label { display: block; margin: 10px 0 5px; }
+    input, select, button, textarea {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #4a2c17;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #5e3a21;
+    }
+    nav {
+      background: #653d1c;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>VED JYOTI Library</h1>
+  <p>Seat Booking Page</p>
+</header>
+
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./SeatBook.html">Book Seat</a>
+</nav>
+
+<section>
+  <h2>Book Your Seat</h2>
+
+  <label for="name">Name</label>
+  <input type="text" id="name" placeholder="Enter your name" />
+
+  <label for="mobile">Mobile Number</label>
+  <input type="tel" id="mobile" placeholder="Enter 10-digit mobile number" maxlength="10" pattern="[0-9]{10}" />
+
+  <label for="address">Address</label>
+  <textarea id="address" rows="3" placeholder="Enter your address"></textarea>
+
+  <label for="startDate">Start Date</label>
+  <input type="date" id="startDate"  />
+
+  <label for="endDate">Expiry Date</label>
+  <input type="date" id="endDate"  />
+
+  <label for="seat">Seat Number</label>
+  <select id="seat"></select>
+
+  <button onclick="bookSeat()">Book Now</button>
+  <p id="message" style="color: green;"></p>
+</section>
+
+<footer>
+  <p>© 2025 VED JYOTI Library</p>
+</footer>
+
+<script>
+  const seatDropdown = document.getElementById("seat");
+  const message = document.getElementById("message");
+
+  for (let i = 1; i <= 20; i++) {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = `Seat ${i}`;
+    seatDropdown.appendChild(opt);
+  }
+
+  function getBookings() {
+    return JSON.parse(localStorage.getItem("vedjyoti_bookings") || "[]");
+  }
+
+  function saveBookings(bookings) {
+    localStorage.setItem("vedjyoti_bookings", JSON.stringify(bookings));
+  }
+
+  function bookSeat() {
+    const name = document.getElementById("name").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+    const seat = seatDropdown.value;
+
+    if (!name || !mobile || !address || !startDate || !endDate || !seat) {
+      message.style.color = "red";
+      message.textContent = "Please fill all fields.";
+      return;
+    }
+
+    if (!/^\d{10}$/.test(mobile)) {
+      message.style.color = "red";
+      message.textContent = "Please enter a valid 10-digit mobile number.";
+      return;
+    }
+
+    if (endDate < startDate) {
+      message.style.color = "red";
+      message.textContent = "End date cannot be before start date.";
+      return;
+    }
+
+    const bookings = getBookings();
+
+    const isConflict = bookings.some(b => {
+      return b.seat === seat &&
+        (
+          (startDate >= b.startDate && startDate <= b.endDate) ||
+          (endDate >= b.startDate && endDate <= b.endDate) ||
+          (startDate <= b.startDate && endDate >= b.endDate)
+        );
+    });
+
+    if (isConflict) {
+      message.style.color = "red";
+      message.textContent = "Seat already booked in this date range.";
+      return;
+    }
+
+    bookings.push({ name, mobile, address, startDate, endDate, seat });
+    saveBookings(bookings);
+
+    message.style.color = "green";
+    message.textContent = `Seat ${seat} booked from ${startDate} to ${endDate} for ${name}.`;
+
+    // Clear inputs
+    document.getElementById("name").value = "";
+    document.getElementById("mobile").value = "";
+    document.getElementById("address").value = "";
+    document.getElementById("startDate").value = "";
+    document.getElementById("endDate").value = "";
+    seatDropdown.selectedIndex = 0;
+  }
+</script>
+
+</body>
+</html>

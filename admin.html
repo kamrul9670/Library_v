@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel – VED JYOTI Library</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #4a2c17;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    nav {
+      background: #653d1c;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    section {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { color: #4a2c17; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #f2e5dc;
+    }
+    button {
+      padding: 6px 10px;
+      margin: 3px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .editBtn {
+      background: #0275d8;
+      color: white;
+    }
+    .deleteBtn {
+      background: #d9534f;
+      color: white;
+    }
+    #editForm {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    #editForm input {
+      margin: 5px;
+      padding: 6px;
+    }
+    #editForm button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>VED JYOTI Library</h1>
+  <p>Admin Panel – Booking Overview</p>
+</header>
+
+<nav>
+  <a href="SeatBook.html">Book Seat</a>
+  <a href="admin.html">Admin Panel</a>
+</nav>
+
+<section>
+  <h2>All Bookings</h2>
+  <div id="bookingTable"></div>
+  <button onclick="clearAll()">Clear All Bookings</button>
+
+  <div id="editForm">
+    <h3>Edit Booking</h3>
+    <input type="text" id="editName" placeholder="Name" />
+    <input type="text" id="editMobile" placeholder="Mobile No." />
+    <input type="text" id="editAddress" placeholder="Address" />
+    <input type="date" id="editStart" />
+    <input type="date" id="editEnd" />
+    <input type="text" id="editSeat" placeholder="Seat" />
+    <button onclick="saveEdit()">Save</button>
+    <button onclick="cancelEdit()">Cancel</button>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 VED JYOTI Library</p>
+</footer>
+
+<script>
+  let editIndex = null;
+
+  function getBookings() {
+    return JSON.parse(localStorage.getItem("vedjyoti_bookings") || "[]");
+  }
+
+  function setBookings(bookings) {
+    localStorage.setItem("vedjyoti_bookings", JSON.stringify(bookings));
+  }
+
+  function renderBookings() {
+    const bookings = getBookings();
+    const tableContainer = document.getElementById("bookingTable");
+
+    if (bookings.length === 0) {
+      tableContainer.innerHTML = "<p>No bookings yet.</p>";
+      return;
+    }
+
+    let tableHTML = `<table>
+      <tr>
+        <th>Name</th>
+        <th>Mobile No.</th>
+        <th>Address</th>
+        <th>Date Range</th>
+        <th>Seat</th>
+        <th>Actions</th>
+      </tr>`;
+
+    tableHTML += bookings.map((b, index) => `
+      <tr>
+        <td>${b.name}</td>
+        <td>${b.mobile || 'N/A'}</td>
+        <td>${b.address || 'N/A'}</td>
+        <td>${b.startDate} → ${b.endDate}</td>
+        <td>${b.seat}</td>
+        <td>
+          <button class="editBtn" onclick="editBooking(${index})">Edit</button>
+          <button class="deleteBtn" onclick="deleteBooking(${index})">Delete</button>
+        </td>
+      </tr>`).join("");
+
+    tableHTML += "</table>";
+    tableContainer.innerHTML = tableHTML;
+  }
+
+  function deleteBooking(index) {
+    const bookings = getBookings();
+    if (confirm("Delete this booking?")) {
+      bookings.splice(index, 1);
+      setBookings(bookings);
+      renderBookings();
+    }
+  }
+
+  function editBooking(index) {
+    const b = getBookings()[index];
+    document.getElementById("editName").value = b.name;
+    document.getElementById("editMobile").value = b.mobile || "";
+    document.getElementById("editAddress").value = b.address || "";
+    document.getElementById("editStart").value = b.startDate;
+    document.getElementById("editEnd").value = b.endDate;
+    document.getElementById("editSeat").value = b.seat;
+    document.getElementById("editForm").style.display = "block";
+    editIndex = index;
+  }
+
+  function cancelEdit() {
+    document.getElementById("editForm").style.display = "none";
+    editIndex = null;
+  }
+
+  function saveEdit() {
+    const name = document.getElementById("editName").value;
+    const mobile = document.getElementById("editMobile").value;
+    const address = document.getElementById("editAddress").value;
+    const start = document.getElementById("editStart").value;
+    const end = document.getElementById("editEnd").value;
+    const seat = document.getElementById("editSeat").value;
+
+    if (!name || !start || !end || !seat) {
+      alert("All fields are required!");
+      return;
+    }
+
+    const bookings = getBookings();
+    bookings[editIndex] = { name, mobile, address, startDate: start, endDate: end, seat };
+    setBookings(bookings);
+    cancelEdit();
+    renderBookings();
+  }
+
+  function clearAll() {
+    if (confirm("Are you sure you want to delete all bookings?")) {
+      localStorage.removeItem("vedjyoti_bookings");
+      renderBookings();
+    }
+  }
+
+  renderBookings();
+</script>
+
+</body>
+</html>

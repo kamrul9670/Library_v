@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student List – VED JYOTI Library</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff4e6;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #4a2c17;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    section {
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #4a2c17;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+    .count {
+      text-align: right;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+    nav {
+      background: #653d1c;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>VED JYOTI Library – Student List</h1>
+</header>
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./SeatBook.html">Seat Book</a>
+  <a href="./admin.html">Admin Panel</a>
+</nav>
+<section>
+  <h2>Current Bookings</h2>
+  <div class="count" id="studentCount">Total Students: 0</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <!-- <th>Mobile No.</th>
+        <th>Address</th> -->
+        <th>Seat No</th>
+        <th>Start Date</th>
+        <th>Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody id="studentTableBody"></tbody>
+  </table>
+</section>
+
+<footer>
+  <p>© 2025 VED JYOTI Library</p>
+</footer>
+
+<script>
+  const tableBody = document.getElementById("studentTableBody");
+  const studentCount = document.getElementById("studentCount");
+
+  function getBookings() {
+    return JSON.parse(localStorage.getItem("vedjyoti_bookings") || "[]");
+  }
+
+  function renderStudents() {
+    const bookings = getBookings();
+
+    if (bookings.length === 0) {
+      tableBody.innerHTML = "<tr><td colspan='6'>No students found.</td></tr>";
+      studentCount.textContent = "Total Students: 0";
+      return;
+    }
+
+    tableBody.innerHTML = bookings.map(b => `
+      <tr>
+        <td>${b.name}</td>
+
+        <!-- <td>${b.mobile || 'N/A'}</td>
+        <td>${b.address || 'N/A'}</td> -->
+        
+        <td>${b.seat}</td>
+        <td>${b.startDate || 'N/A'}</td>
+        <td>${b.endDate || 'N/A'}</td>
+      </tr>
+    `).join("");
+
+    studentCount.textContent = "Total Students: " + bookings.length;
+  }
+
+  renderStudents();
+</script>
+
+</body>
+</html>
